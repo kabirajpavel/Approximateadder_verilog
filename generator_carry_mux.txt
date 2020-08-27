@@ -1,0 +1,35 @@
+module generator(output [3:0] p,g, input [3:0] a,b
+    );
+	 assign g[0]=a[0]&&b[0],
+	        g[1]=a[1]&&b[1],
+	        g[2]=a[2]&&b[2],
+	        g[3]=a[3]&&b[3],
+	        
+	        p[0]=a[0]^b[0],
+			  p[1]=a[1]^b[1],
+			  p[2]=a[2]^b[2],
+			  p[3]=a[3]^b[3];
+endmodule
+module carry(output c,input c0,input [3:0]p,g);
+		 assign c=g[3]||(g[2]&&p[3])||(g[1]&&p[3]&&p[2])||(g[0]&&p[3]&&p[2]&&p[1])||(c0&&p[3]&&p[2]&&p[1]&&p[0]);
+endmodule
+
+
+module subadder (output [3:0] s, input c0,input [3:0] p,g);
+       
+       wire c1,c2,c3;
+		 assign s[0]=c0^p[0],
+		        c1=(c0&&p[0])||(g[0]), 
+		        s[1]=c1^p[1],
+				  c2=(c1&&p[1])||(g[1]),
+				  s[2]=c2^p[2],
+				  c3=(c2&&p[2])||(g[2]),
+				  s[3]=c3^p[3];
+
+endmodule
+
+
+module mux (output m,input c0,c1,input s);
+           assign m=(c0&&!s)||(c1&&s);
+
+endmodule
